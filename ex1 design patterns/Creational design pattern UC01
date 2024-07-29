@@ -1,3 +1,5 @@
+//Singleton Pattern
+
 // ClassroomManager.java
 public class ClassroomManager {
     private static ClassroomManager instance;
