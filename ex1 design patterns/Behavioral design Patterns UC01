@@ -1,0 +1,54 @@
+public interface AssignmentSubmissionStrategy {
+    void submit(Assignment assignment, String feedback);
+}
+import java.util.Date;
+
+public class NormalSubmissionStrategy implements AssignmentSubmissionStrategy {
+    private static final int MAX_CONTENT_LENGTH = 5000; // Constraint for content length
+
+    @Override
+    public void submit(Assignment assignment, String feedback) {
+        // Content length check
+        if (feedback.length() > MAX_CONTENT_LENGTH) {
+            System.out.println("Submission exceeds maximum allowed length of " + MAX_CONTENT_LENGTH + " characters.");
+            return;
+        }
+
+        // Due date check
+        Date now = new Date();
+        if (now.getTime() > assignment.getDueDate().getTime()) {
+            System.out.println("Submission is past the due date.");
+            return;
+        }
+
+        System.out.println("Normal submission: " + assignment.getTitle() + " with feedback: " + feedback);
+        Logger.log("Assignment " + assignment.getTitle() + " submitted successfully.");
+    }
+}
+import java.util.Date;
+
+public class LateSubmissionStrategy implements AssignmentSubmissionStrategy {
+    private static final int MAX_CONTENT_LENGTH = 5000; // Constraint for content length
+    private static final int LATE_WINDOW_DAYS = 7; // Allowed window for late submissions in days
+
+    @Override
+    public void submit(Assignment assignment, String feedback) {
+        // Content length check
+        if (feedback.length() > MAX_CONTENT_LENGTH) {
+            System.out.println("Submission exceeds maximum allowed length of " + MAX_CONTENT_LENGTH + " characters.");
+            return;
+        }
+
+        // Late window check
+        Date now = new Date();
+        long diffInMillis = now.getTime() - assignment.getDueDate().getTime();
+        long diffInDays = diffInMillis / (1000 * 60 * 60 * 24);
+        if (diffInDays > LATE_WINDOW_DAYS) {
+            System.out.println("Submission window expired. Late submission is not allowed beyond " + LATE_WINDOW_DAYS + " days.");
+            return;
+        }
+
+        System.out.println("Late submission: " + assignment.getTitle() + " with feedback: " + feedback);
+        Logger.log("Late submission for assignment " + assignment.getTitle() + " processed.");
+    }
+}
