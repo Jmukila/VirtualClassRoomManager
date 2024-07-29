@@ -1,3 +1,5 @@
+//Factory pattern
+
 // ClassroomFactory.java
 public class ClassroomFactory {
     public Classroom createClassroom(String type, String name) {
@@ -11,5 +13,45 @@ public class ClassroomFactory {
             default:
                 throw new IllegalArgumentException("Unknown classroom type: " + type);
         }
+    }
+}
+
+//Workshop classroom
+package VirtualClassManager;
+
+public class WorkshopClassroom extends Classroom {
+    public WorkshopClassroom(String name) {
+        super(name);
+    }
+
+    @Override
+    public String getType() {
+        return "Workshop";
+    }
+}
+//QA classroom
+package VirtualClassManager;
+
+public class QAClassroom extends Classroom {
+    public QAClassroom(String name) {
+        super(name);
+    }
+
+    @Override
+    public String getType() {
+        return "Q&A";
+    }
+}
+//Regular classroom
+package VirtualClassManager;
+
+public class RegularClassroom extends Classroom {
+    public RegularClassroom(String name) {
+        super(name);
+    }
+
+    @Override
+    public String getType() {
+        return "Regular";
     }
 }
