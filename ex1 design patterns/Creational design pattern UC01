@@ -1,0 +1,18 @@
+// ClassroomManager.java
+public class ClassroomManager {
+    private static ClassroomManager instance;
+    private Map<String, Classroom> classrooms;
+
+    private ClassroomManager() {
+        classrooms = new HashMap<>();
+    }
+
+    public static synchronized ClassroomManager getInstance() {
+        if (instance == null) {
+            instance = new ClassroomManager();
+        }
+        return instance;
+    }
+
+    // Existing methods...
+}

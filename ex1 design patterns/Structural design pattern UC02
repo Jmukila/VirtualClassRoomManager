@@ -1,0 +1,49 @@
+// Component
+public interface Classroom {
+    String getDescription();
+}
+
+// Concrete Component
+public class BasicClassroom implements Classroom {
+    @Override
+    public String getDescription() {
+        return "Basic Classroom";
+    }
+}
+
+// Decorator
+public abstract class ClassroomDecorator implements Classroom {
+    protected Classroom classroom;
+
+    public ClassroomDecorator(Classroom classroom) {
+        this.classroom = classroom;
+    }
+
+    @Override
+    public String getDescription() {
+        return classroom.getDescription();
+    }
+}
+
+// Concrete Decorators
+public class LabClassroomDecorator extends ClassroomDecorator {
+    public LabClassroomDecorator(Classroom classroom) {
+        super(classroom);
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", with Lab Facilities";
+    }
+}
+
+public class OnlineClassroomDecorator extends ClassroomDecorator {
+    public OnlineClassroomDecorator(Classroom classroom) {
+        super(classroom);
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", with Online Access";
+    }
+}

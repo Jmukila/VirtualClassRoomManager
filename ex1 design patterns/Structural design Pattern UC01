@@ -1,0 +1,51 @@
+Use Case: Managing Complex Classroom Structures
+// Component
+public abstract class ClassroomComponent {
+    public void addComponent(ClassroomComponent component) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void removeComponent(ClassroomComponent component) {
+        throw new UnsupportedOperationException();
+    }
+
+    public abstract String getName();
+}
+
+// Leaf
+public class Classroom extends ClassroomComponent {
+    private String name;
+
+    public Classroom(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+}
+
+// Composite
+public class ClassroomGroup extends ClassroomComponent {
+    private List<ClassroomComponent> components = new ArrayList<>();
+
+    @Override
+    public void addComponent(ClassroomComponent component) {
+        components.add(component);
+    }
+
+    @Override
+    public void removeComponent(ClassroomComponent component) {
+        components.remove(component);
+    }
+
+    @Override
+    public String getName() {
+        StringBuilder names = new StringBuilder();
+        for (ClassroomComponent component : components) {
+            names.append(component.getName()).append(", ");
+        }
+        return names.toString();
+    }
+}

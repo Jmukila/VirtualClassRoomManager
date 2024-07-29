@@ -1,0 +1,71 @@
+// Observer Interface
+public interface Observer {
+    void update(String message);
+}
+
+// Subject Interface
+public interface Subject {
+    void addObserver(Observer observer);
+    void removeObserver(Observer observer);
+    void notifyObservers(String message);
+}
+
+// Concrete Subject
+public class Classroom implements Subject {
+    private String name;
+    private List<Student> students;
+    private List<Observer> observers = new ArrayList<>();
+
+    public Classroom(String name) {
+        this.name = name;
+        this.students = new ArrayList<>();
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(String message) {
+        for (Observer observer : observers) {
+            observer.update(message);
+        }
+    }
+
+    public void addNotification(String notification) {
+        notifyObservers(notification);
+        System.out.println("Notification: " + notification);
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+        addObserver(student);
+        System.out.println("Student " + student.getName() + " has been added.");
+    }
+
+    // Other methods
+}
+
+// Concrete Observer
+public class Student implements Observer {
+    private String id;
+    private String name;
+
+    public Student(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println("Student " + name + " received notification: " + message);
+    }
+
+    // Other methods
+}
