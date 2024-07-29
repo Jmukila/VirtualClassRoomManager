@@ -1,6 +1,6 @@
 package VirtualClassManager;
 
-import java.util.Date; // Import statement for Date
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Scanner;
@@ -21,16 +21,28 @@ public class StudentActions {
         }
     }
 
-    public void submitAssignment(String className, String studentId, String title, String content) throws ClassroomNotFoundException, StudentNotFoundException {
+    public void submitAssignment(String className, String studentId, String title, String content, Date submissionDate) throws ClassroomNotFoundException, StudentNotFoundException {
         Classroom classroom = classroomManager.getClassroom(className);
         if (classroom != null) {
             boolean studentExists = classroom.getStudents().stream()
                     .anyMatch(student -> student.getId().equals(studentId));
             if (studentExists) {
-                Assignment assignment = new Assignment(title, content, new Date()); // Ensure Date is correctly imported
-                AssignmentSubmissionStrategy strategy = new NormalSubmissionStrategy(); // Assuming a normal submission for simplicity
+                // Find the assignment to determine the due date
+                Assignment assignment = classroom.getAssignments().stream()
+                        .filter(a -> a.getTitle().equals(title))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Assignment " + title + " not found in classroom " + className + "."));
+                
+                // Determine the submission strategy
+                AssignmentSubmissionStrategy strategy;
+                if (submissionDate.after(assignment.getDueDate())) {
+                    strategy = new LateSubmissionStrategy();
+                } else {
+                    strategy = new NormalSubmissionStrategy();
+                }
+                
                 strategy.submit(assignment, content);
-                Logger.log("Assignment " + assignment.getTitle() + " submitted by " + studentId + " to " + className + ".");
+                Logger.log("Assignment " + title + " submitted by " + studentId + " to " + className + ".");
             } else {
                 throw new StudentNotFoundException("Student " + studentId + " not found in classroom " + className + ".");
             }

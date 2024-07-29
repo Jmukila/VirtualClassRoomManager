@@ -1,10 +1,14 @@
 package VirtualClassManager;
 
-import java.util.Date;
+import java.sql.Date; // Import statement for java.sql.Date
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Define the expected date format
+
     public static void main(String[] args) {
         Logger.log("Starting Virtual Classroom Manager");
         Scanner scanner = new Scanner(System.in);
@@ -101,7 +105,7 @@ public class Main {
                     String title = scanner.nextLine();
                     System.out.print("Enter assignment description: ");
                     String description = scanner.nextLine();
-                    Assignment assignment = new Assignment(title, description, new Date());
+                    Assignment assignment = new Assignment(title, description, new Date(System.currentTimeMillis()));
                     adminActions.scheduleAssignment(classNameToSchedule, assignment);
                     break;
                 case 8:
@@ -148,7 +152,16 @@ public class Main {
                     String title = scanner.nextLine();
                     System.out.print("Enter submission content: ");
                     String content = scanner.nextLine();
-                    studentActions.submitAssignment(classNameToSubmit, studentId, title, content);
+                    System.out.print("Enter submission date (YYYY-MM-DD): ");
+                    String dateString = scanner.nextLine();
+                    Date submissionDate;
+                    try {
+                        java.util.Date utilDate = dateFormat.parse(dateString);
+                        submissionDate = new Date(utilDate.getTime()); // Convert java.util.Date to java.sql.Date
+                        studentActions.submitAssignment(classNameToSubmit, studentId, title, content, submissionDate);
+                    } catch (ParseException e) {
+                        System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                    }
                     break;
                 case 3:
                     System.out.print("Enter student ID: ");

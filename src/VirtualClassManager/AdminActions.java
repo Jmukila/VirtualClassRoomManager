@@ -68,11 +68,13 @@ public class AdminActions {
         Classroom classroom = classroomManager.getClassroom(className);
         if (classroom != null) {
             classroom.addAssignment(assignment);
-            Logger.log("Scheduled assignment " + assignment.getTitle() + " for classroom " + className);
+            Logger.log("Scheduled assignment " + assignment.getTitle() + " for classroom " + className + ". Due date: " + assignment.getDueDate());
+            System.out.println("Assignment scheduled successfully.");
         } else {
             throw new ClassroomNotFoundException("Classroom " + className + " not found.");
         }
     }
+
 
     public void notifyStudents(String className, String message) throws ClassroomNotFoundException {
         Classroom classroom = classroomManager.getClassroom(className);

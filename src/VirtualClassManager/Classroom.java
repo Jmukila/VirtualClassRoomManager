@@ -1,6 +1,7 @@
 package VirtualClassManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,11 +108,21 @@ public class Classroom implements Subject {
         }
     }
 
-    public void submitAssignment(String studentId, String assignmentTitle, String submissionContent) {
+    public void submitAssignment(String studentId, String assignmentTitle, String submissionContent, Date submissionDate) {
         Optional<Assignment> assignmentOpt = assignments.stream().filter(a -> a.getTitle().equals(assignmentTitle)).findFirst();
         if (assignmentOpt.isPresent()) {
             Assignment assignment = assignmentOpt.get();
-            assignment.setSubmissionContent(submissionContent);
+            AssignmentSubmissionStrategy strategy;
+
+            // Determine if the submission is late
+            if (submissionDate.after(assignment.getDueDate())) {
+                strategy = new LateSubmissionStrategy();
+            } else {
+                strategy = new NormalSubmissionStrategy();
+            }
+
+            // Submit using the chosen strategy
+            strategy.submit(assignment, submissionContent);
             System.out.println("Assignment submitted by student " + studentId + " for " + assignmentTitle + ".");
         } else {
             System.out.println("Assignment " + assignmentTitle + " not found in classroom " + name + ".");
